@@ -1180,6 +1180,7 @@ loadxrdb()
         XRDB_LOAD_COLOR("dwm.selbgcolor", selbgcolor);
         XRDB_LOAD_COLOR("dwm.selfgcolor", selfgcolor);
       }
+	  XrmDestroyDatabase(xrdb);
     }
   }
 
@@ -2484,8 +2485,10 @@ xrdb(const Arg *arg)
   loadxrdb();
   int i;
   unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
-  for (i = 0; i < LENGTH(colors); i++)
-                scheme[i] = drw_scm_create(drw, colors[i], alphas, 3);
+  for (i = 0; i < LENGTH(colors); i++) {
+	  if (scheme[i] != NULL) free(scheme[i]);
+	  scheme[i] = drw_scm_create(drw, colors[i], alphas, 3);
+  }
   focus(NULL);
   arrange(NULL);
 }
