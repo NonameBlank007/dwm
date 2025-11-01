@@ -2486,7 +2486,7 @@ xrdb(const Arg *arg)
   int i;
   unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
   for (i = 0; i < LENGTH(colors); i++) {
-	  if (scheme[i] != NULL) free(scheme[i]);
+	  if (scheme[i] != NULL) drw_scm_free(drw, scheme[i], 3);
 	  scheme[i] = drw_scm_create(drw, colors[i], alphas, 3);
   }
   focus(NULL);
