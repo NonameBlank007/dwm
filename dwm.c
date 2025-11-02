@@ -1833,6 +1833,7 @@ sendevent(Client *c, Atom proto)
 	Atom *protocols;
 	int exists = 0;
 	XEvent ev;
+	memset(&ev, 0, sizeof(ev));
 
 	if (XGetWMProtocols(dpy, c->win, &protocols, &n)) {
 		while (!exists && n--)
