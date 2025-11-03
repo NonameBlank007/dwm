@@ -1578,7 +1578,8 @@ void
 quit(const Arg *arg)
 {
 	size_t i;
-
+	if(arg->i) restart = 1;
+	if(!restart) {
 	/* kill child processes */
 	for (i = 0; i < autostart_len; i++) {
 		if (0 < autostart_pids[i]) {
@@ -1586,7 +1587,7 @@ quit(const Arg *arg)
 			waitpid(autostart_pids[i], NULL, 0);
 		}
 	}
-	if(arg->i) restart = 1;
+}
 	running = 0;
 }
 
