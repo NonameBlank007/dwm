@@ -1,0 +1,9 @@
+# object files
+*.o
+
+# merge files
+*.orig
+*.rej
+
+# ignore binary
+/dwm
