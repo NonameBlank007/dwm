@@ -27,6 +27,11 @@ static char *colors[][3] = {
     [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
 
+static const char *const autostart[] = {
+	"st", NULL,
+	NULL /* terminate */
+};
+
 /* tagging */
 static const char *tags[] = { " ", "󰻀", "󰈹", "", "", "󰘻", "󰓓", "", "" };
 
