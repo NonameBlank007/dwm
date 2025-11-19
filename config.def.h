@@ -11,7 +11,7 @@ static       int smartgaps          = 0;        /* 1 means no outer gap when the
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = {"FiraCodeNerdFont:size=12", "JetBrainsMono Nerd Font:size=12"};
+static const char *fonts[]          = {"FiraCodeNerdFont:style=Regular:size=12:antialias=true;", "JetBrainsMono Nerd Font:style=Regular:size=12:antialias=true"};
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=12";
 static unsigned int baralpha        = 0xd0;
 static unsigned int borderalpha     = OPAQUE;
@@ -28,7 +28,24 @@ static char *colors[][3] = {
 };
 
 static const char *const autostart[] = {
-	"st", NULL,
+	/* reload prev color scheme */
+    "wal", "-R", NULL,
+    
+    /* start in background without animation */
+    "picom", "-b", NULL,
+    
+    /* notification daemon */
+    "dunst", "&", NULL,
+
+    /* network manager */
+    "nm-applet", "&", NULL,
+    
+    /* auth handler */ 
+    "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", "&", NULL,
+
+	/* xrdb key press  */
+    "sh", "-c", "sleep 2 && xdotool key alt+F5", NULL,
+
 	NULL /* terminate */
 };
 
@@ -43,6 +60,7 @@ static const Rule rules[] = {
 	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
 	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
 	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
+    { "kitty",   NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
@@ -59,7 +77,7 @@ static const int refreshrate = 120;  /* refresh rate (per second) for client mov
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
+	{ "󰣇 ",       tile },    /* first entry is default */
 	{ "[M]",      monocle },
 	{ "[@]",      spiral },
 	{ "[\\]",     dwindle },
@@ -93,67 +111,129 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "st", NULL };
+
+/* system, app control */ 
+static const char *lock[]     = { "slock", NULL};
+static const char *termcmd[]  = { "kitty", NULL };
+static const char *browser[]  = { "firefox", NULL};
+static const char *manager[]  = { "dolphin", NULL};
+
+/* night light control */
+static const char *night_on[] = {"sh", "-c", "redshift -O 4500", NULL};
+static const char *night_off[] = {"sh", "-c", "redshift -x", NULL};
+
+/* Volume Control */
+static const char *volup[]     = { "wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "5%+",      NULL };
+static const char *voldown[]   = { "wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "5%-",      NULL };
+static const char *mutevol[]   = { "wpctl",   "set-mute",   "@DEFAULT_AUDIO_SINK@",      "toggle",   NULL };
+
+/* Brightness Control */
+static const char *bright[]    = { "brightnessctl", "set", "+10%", NULL };
+static const char *dim[]       = { "brightnessctl", "set", "10%-", NULL }; 
+
+/* custom */
+static const char *screenshot[] = {"sh", "-c", ".config/rofi/applets/bin/screenshot.sh", NULL};
+static const char *mpd[] = {"sh", "-c", ".config/rofi/applets/bin/mpd.sh", NULL};
+static const char *rofi[] = {"sh", "-c", ".config/rofi/launchers/type-7/launcher.sh", NULL};
+static const char *powermenu[] = {"sh", "-c", ".config/rofi/powermenu/type-6/powermenu.sh", NULL};
+static const char *applet[] = {"sh", "-c", ".config/rofi/applets/bin/apps.sh", NULL};
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	/* application launcher */
+    { ALTKEY,                       XK_a,      spawn,          {.v = applet } },
+    { ALTKEY,                       XK_e,      spawn,          {.v = manager } },
+    { ALTKEY,                       XK_f,      spawn,          {.v = browser } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { ALTKEY|ShiftMask,             XK_a,      spawn,          {.v = rofi } },
+    { ALTKEY|ShiftMask,             XK_m,      spawn,          {.v = mpd } },
+
+	/* system general control */
+    { 0,                            XF86XK_AudioRaiseVolume,  spawn, {.v = volup } },
+    { 0,                            XF86XK_AudioLowerVolume,  spawn, {.v = voldown } },
+    { 0,                            XF86XK_AudioMute,         spawn, {.v = mutevol } },
+    { 0,                            XF86XK_MonBrightnessUp,   spawn, {.v = bright } },
+    { 0,                            XF86XK_MonBrightnessDown, spawn, {.v = dim } },
+	{ 0,                  			XK_F12,      			  spawn, {.v = lock}}, /* lock screen */
+	{ ControlMask,                  XK_l,      			  	  spawn, {.v = lock}}, /* lock screen */
+    { ALTKEY|ControlMask,           XK_z,                     spawn, {.v = night_on } },
+    { ALTKEY|ControlMask,           XK_x,                     spawn, {.v = night_off } },
+
+	/* wm management */
+    { MODKEY,                       XK_Tab,    view,           {0} },
+    { MODKEY,                       XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+    { MODKEY|ShiftMask,             XK_space,  setlayout,      {0} },
+	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
+
+	/* layout control */
+    { MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} }, /* default */
+    { MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} }, /* monocle */
+    { MODKEY,                       XK_g,      setlayout,      {.v = &layouts[7]} }, /* grid */
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[13]} }, /* floating */
+    { MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+    { MODKEY,                       XK_u,      incnmaster,     {.i = -1 } },
+	{ ALTKEY|ControlMask,           XK_comma,  cyclelayout,    {.i = -1 } },
+    { ALTKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
+
+	/* window focus */
+	{ MODKEY,                       XK_Return, zoom,           {0} },
+    { MODKEY,                       XK_h,      focusstack,     {.i = -1 } },
+    { MODKEY,                       XK_l,      focusstack,     {.i = +1 } },
+    { MODKEY,                       XK_j,      focusmon,       {.i = -1 } },
+    { MODKEY,                       XK_k,      focusmon,       {.i = +1 } },
+    { MODKEY|ShiftMask,             XK_j,      tagmon,         {.i = -1 } },
+    { MODKEY|ShiftMask,             XK_k,      tagmon,         {.i = +1 } },
+
+	/* Window sizing */
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.25} },
 	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} },
 	{ MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
-	{ MODKEY|Mod4Mask,              XK_u,      incrgaps,       {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_i,      incrigaps,      {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_i,      incrigaps,      {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_o,      incrogaps,      {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_o,      incrogaps,      {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_6,      incrihgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_6,      incrihgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_7,      incrivgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_7,      incrivgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_8,      incrohgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_8,      incrohgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_9,      incrovgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_9,      incrovgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              XK_0,      togglegaps,     {0} },
-	{ MODKEY|Mod4Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY|ControlMask,			XK_comma,  cyclelayout,    {.i = -1 } },
-	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_F5,     xrdb,           {.v = NULL } },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} }, 
+
+	/* gaps control */ 
+    { MODKEY|ControlMask,           XK_u,      incrgaps,       {.i = +1 } },
+    { MODKEY|ControlMask|ShiftMask, XK_u,      incrgaps,       {.i = -1 } },
+    { MODKEY|ControlMask,           XK_i,      incrigaps,      {.i = +1 } },
+    { MODKEY|ControlMask|ShiftMask, XK_i,      incrigaps,      {.i = -1 } },
+    { MODKEY|ControlMask,           XK_o,      incrogaps,      {.i = +1 } },
+    { MODKEY|ControlMask|ShiftMask, XK_o,      incrogaps,      {.i = -1 } },
+    { MODKEY|ControlMask,           XK_6,      incrihgaps,     {.i = +1 } },
+    { MODKEY|ControlMask|ShiftMask, XK_6,      incrihgaps,     {.i = -1 } },
+    { MODKEY|ControlMask,           XK_7,      incrivgaps,     {.i = +1 } },
+    { MODKEY|ControlMask|ShiftMask, XK_7,      incrivgaps,     {.i = -1 } },
+    { MODKEY|ControlMask,           XK_8,      incrohgaps,     {.i = +1 } },
+    { MODKEY|ControlMask|ShiftMask, XK_8,      incrohgaps,     {.i = -1 } },
+    { MODKEY|ControlMask,           XK_9,      incrovgaps,     {.i = +1 } },
+    { MODKEY|ControlMask|ShiftMask, XK_9,      incrovgaps,     {.i = -1 } },
+    { MODKEY|ControlMask,           XK_0,      togglegaps,     {0} },
+    { MODKEY|ControlMask|ShiftMask, XK_0,      defaultgaps,    {0} },
+
+	/* tags */
+    { MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+    { MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+    TAGKEYS(                        XK_1,                      0)
+    TAGKEYS(                        XK_2,                      1)
+    TAGKEYS(                        XK_3,                      2)
+    TAGKEYS(                        XK_4,                      3)
+    TAGKEYS(                        XK_5,                      4)
+    TAGKEYS(                        XK_6,                      5)
+    TAGKEYS(                        XK_7,                      6)
+    TAGKEYS(                        XK_8,                      7)
+    TAGKEYS(                        XK_9,                      8)
+
+	/* system */
+	{ MODKEY,                       XK_q,      killclient,     {0} },
+    { MODKEY|ShiftMask,             XK_q,      quit,           {0} }, /* quit dwm */
+    { MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} }, /* refresh (restartsig) */
+    { ALTKEY,                       XK_q,      spawn,          {.v = powermenu}},
+	{ ALTKEY,                       XK_F5,     xrdb,           {.v = NULL } }, 
+
+	/* custom */
+    { 0,                            XK_Print,  spawn,          {.v = screenshot}},
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          {.v = screenshot}},
+    { ALTKEY,                       XK_w,      spawn,          SHCMD("~/.scripts/wallshuf.sh") },
 };
 
 /* button definitions */
@@ -166,6 +246,8 @@ static const Button buttons[] = {
 	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {.i = 1} },
 	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {.i = 2} },
 	{ ClkStatusText,        0,              Button3,        sigstatusbar,   {.i = 3} },
+    { ClkStatusText,        0,              Button4,        sigstatusbar,   {.i = 4} },
+    { ClkStatusText,        0,              Button5,        sigstatusbar,   {.i = 5} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
