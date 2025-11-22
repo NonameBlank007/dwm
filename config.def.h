@@ -43,6 +43,9 @@ static const char *const autostart[] = {
 
     /* network manager */
     "nm-applet", "&", NULL,
+
+    /* start sxhkd */
+    "sxhkd", NULL,
     
     /* auth handler */ 
     "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", "&", NULL,
