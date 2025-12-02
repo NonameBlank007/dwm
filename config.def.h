@@ -15,7 +15,7 @@ static const int usealtbar          = 1;        /* 1 means use non-dwm status ba
 static const char *altbarclass      = "Polybar"; /* Alternate bar class name */
 static const char *alttrayname      = "tray";    /* Polybar tray instance name */
 static const char *altbarcmd        = "$HOME/bar.sh"; /* Alternate bar launch command */
-static const char *fonts[]          = {"FiraCodeNerdFont:style=Regular:size=12:antialias=true;", "JetBrainsMono Nerd Font:style=Regular:size=12:antialias=true"};
+static const char *fonts[]          = {"FiraCodeNerdFont:style=Regular:size=12:antialias=true:autohint=true:hintstyle=hintfull", "JetBrainsMono Nerd Font:style=Regular:size=12:antialias=true:autohint=true:hintstyle=hintfull", "NotoColorEmoji:pixelsize=14:antialias=true:autohint=true"};
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=12";
 static unsigned int baralpha        = 0xd0;
 static unsigned int borderalpha     = OPAQUE;
