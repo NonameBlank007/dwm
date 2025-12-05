@@ -118,8 +118,8 @@ static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", normbgco
 /* system, app control */ 
 static const char *lock[]     = { "slock", NULL};
 static const char *termcmd[]  = { "kitty", NULL };
-static const char *browser[]  = { "firefox", NULL};
-static const char *manager[]  = { "dolphin", NULL};
+static const char *browser[]  = { "chromium", NULL};
+static const char *manager[]  = { "thunar", NULL};
 
 /* night light control */
 static const char *night_on[] = {"sh", "-c", "redshift -O 4500", NULL};
