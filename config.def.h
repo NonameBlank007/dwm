@@ -141,6 +141,7 @@ static const char *rofi[] = {"sh", "-c", ".config/rofi/launchers/type-7/launcher
 static const char *powermenu[] = {"sh", "-c", ".config/rofi/powermenu/type-6/powermenu.sh", NULL};
 static const char *applet[] = {"sh", "-c", ".config/rofi/applets/bin/apps.sh", NULL};
 
+#include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	/* application launcher */
@@ -187,6 +188,8 @@ static const Key keys[] = {
     { MODKEY,                       XK_k,      focusmon,       {.i = +1 } },
     { MODKEY|ShiftMask,             XK_j,      tagmon,         {.i = -1 } },
     { MODKEY|ShiftMask,             XK_k,      tagmon,         {.i = +1 } },
+    { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 
 	/* Window sizing */
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
