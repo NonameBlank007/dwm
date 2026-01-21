@@ -188,14 +188,18 @@ static const Key keys[] = {
     { MODKEY,                       XK_l,      focusstack,     {.i = +1 } },
     { MODKEY,                       XK_j,      focusmon,       {.i = -1 } },
     { MODKEY,                       XK_k,      focusmon,       {.i = +1 } },
-    { MODKEY|ShiftMask,             XK_j,      tagmon,         {.i = -1 } },
-    { MODKEY|ShiftMask,             XK_k,      tagmon,         {.i = +1 } },
+    
+    /* monitor tagging */
+    { MODKEY|ControlMask,           XK_j,      tagmon,         {.i = -1 } },
+    { MODKEY|ControlMask,           XK_k,      tagmon,         {.i = +1 } },
+
+    /* move windows */
     { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 
 	/* Window sizing */
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY|ControlMask,           XK_h,      setmfact,       {.f = -0.05} },
+	{ MODKEY|ControlMask,           XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.25} },
 	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} },
 	{ MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} },
