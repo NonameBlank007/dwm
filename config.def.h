@@ -46,6 +46,9 @@ static const char *const autostart[] = {
     /* auth handler */ 
     "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", "&", NULL,
 
+    /* Input Gesture */
+    "libinput-gestures-setup", "autostart",  "start", NULL, 
+
 	/* xrdb key press  */
     "sh", "-c", "sleep 2 && xdotool key alt+F5", NULL,
 
