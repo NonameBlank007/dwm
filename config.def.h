@@ -144,13 +144,11 @@ static const char *screenshot[] = {"sh", "-c", ".config/rofi/applets/bin/screens
 static const char *mpd[] = {"sh", "-c", ".config/rofi/applets/bin/mpd.sh", NULL};
 static const char *rofi[] = {"sh", "-c", ".config/rofi/launchers/type-7/launcher.sh", NULL};
 static const char *powermenu[] = {"sh", "-c", ".config/rofi/powermenu/type-6/powermenu.sh", NULL};
-static const char *applet[] = {"sh", "-c", ".config/rofi/applets/bin/apps.sh", NULL};
 
 #include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	/* application launcher */
-    { ALTKEY,                       XK_a,      spawn,          {.v = applet } },
     { ALTKEY,                       XK_e,      spawn,          {.v = manager } },
     { ALTKEY,                       XK_f,      spawn,          {.v = browser } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
