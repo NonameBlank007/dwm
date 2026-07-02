@@ -1337,12 +1337,6 @@ manage(Window w, XWindowAttributes *wa)
 	c->x = MAX(c->x, c->mon->wx);
 	c->y = MAX(c->y, c->mon->wy);
 	c->bw = borderpx;
-	
-	if (strstr(c->name, "KDE Connect Daemon")) {
-		c->isfloating = 1;
-		c->bw = 0;
-		resizeclient(c, selmon->mx, selmon->my, selmon->mw, selmon->mh);
-	}
 
 	wc.border_width = c->bw;
 	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
