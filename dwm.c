@@ -193,6 +193,7 @@ typedef struct {
 	unsigned int tags;
 	int isfloating;
 	int isterminal;
+	int isfullscreen;
 	int noswallow;
 	int monitor;
 } Rule;
@@ -416,6 +417,7 @@ applyrules(Client *c)
 	XClassHint ch = { NULL, NULL };
 
 	/* rule matching */
+	int isfullscreen = 0;
 	c->isfloating = 0;
 	c->tags = 0;
 	XGetClassHint(dpy, c->win, &ch);
@@ -428,6 +430,7 @@ applyrules(Client *c)
 		&& (!r->class || strstr(class, r->class))
 		&& (!r->instance || strstr(instance, r->instance)))
 		{
+			isfullscreen = r->isfullscreen;
 			c->isterminal = r->isterminal;
 			c->noswallow  = r->noswallow;
 			c->isfloating = r->isfloating;
@@ -441,6 +444,8 @@ applyrules(Client *c)
 		XFree(ch.res_class);
 	if (ch.res_name)
 		XFree(ch.res_name);
+	if (isfullscreen)
+		setfullscreen(c, 1);
 	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 }
 
