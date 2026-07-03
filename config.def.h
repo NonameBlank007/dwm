@@ -249,6 +249,7 @@ static const Key keys[] = {
     { 0,                            XK_Print,  spawn,          {.v = screenshot}},
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          {.v = screenshot}},
     { ALTKEY,                       XK_w,      spawn,          SHCMD("~/.scripts/wallshuf.sh") },
+    { ALTKEY|ShiftMask,             XK_w,      spawn,          SHCMD("qs -p .config/quickshell/launcher/wallpaper/shell.qml") },
 };
 
 /* button definitions */
