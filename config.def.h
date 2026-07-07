@@ -48,7 +48,7 @@ static const char *const autostart[] = {
     "sxhkd", NULL,
     
     /* auth handler */ 
-    "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", "&", NULL,
+    "/usr/lib/polkit-mate/polkit-mate-authentication-agent-1", "&", NULL,
 
     /* Input Gesture */
     "libinput-gestures-setup", "autostart",  "start", NULL, 
