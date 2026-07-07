@@ -142,10 +142,8 @@ static const char *bright[]    = { "brightnessctl", "set", "+10%", NULL };
 static const char *dim[]       = { "brightnessctl", "set", "10%-", NULL }; 
 
 /* custom */
-static const char *screenshot[] = {"sh", "-c", ".config/rofi/applets/bin/screenshot.sh", NULL};
-static const char *mpd[] = {"sh", "-c", ".config/rofi/applets/bin/mpd.sh", NULL};
-static const char *rofi[] = {"sh", "-c", ".config/rofi/launchers/type-7/launcher.sh", NULL};
-static const char *powermenu[] = {"sh", "-c", ".config/rofi/powermenu/type-6/powermenu.sh", NULL};
+static const char *rofi[] = {"sh", "-c", ".config/rofi/launchers/launcher.sh", NULL};
+static const char *powermenu[] = {"sh", "-c", ".config/rofi/powermenu/powermenu.sh", NULL};
 
 #include "movestack.c"
 static const Key keys[] = {
@@ -155,7 +153,6 @@ static const Key keys[] = {
     { ALTKEY,                       XK_f,      spawn,          {.v = browser } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { ALTKEY|ShiftMask,             XK_a,      spawn,          {.v = rofi } },
-    { ALTKEY|ShiftMask,             XK_m,      spawn,          {.v = mpd } },
 
 	/* system general control */
     { 0,                            XF86XK_AudioRaiseVolume,  spawn, {.v = volup } },
@@ -246,8 +243,8 @@ static const Key keys[] = {
 	{ ALTKEY,                       XK_F5,     xrdb,           {.v = NULL } }, 
 
 	/* custom */
-    { 0,                            XK_Print,  spawn,          {.v = screenshot}},
-	{ MODKEY|ShiftMask,             XK_s,      spawn,          {.v = screenshot}},
+    { 0,                            XK_Print,  spawn,          SHCMD("flameshot gui") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("flameshot gui") },
     { ALTKEY,                       XK_w,      spawn,          SHCMD("~/.scripts/wallshuf.sh") },
     { ALTKEY|ShiftMask,             XK_w,      spawn,          SHCMD("qs -p .config/quickshell/launcher/wallpaper/shell.qml") },
 };
