@@ -53,8 +53,8 @@ static const char *const autostart[] = {
     /* Input Gesture */
     "libinput-gestures-setup", "autostart",  "start", NULL, 
 
-	/* xrdb key press and local session launch */
-    "sh", "-c", "sleep 2 && xdotool key alt+F5 && runsvdir ~/.runit/runsvdir", "&",  NULL,
+	/* xrdb key press  */
+    "sh", "-c", "sleep 2 && xdotool key alt+F5", NULL,
 
 	NULL /* terminate */
 };
