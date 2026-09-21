@@ -56,7 +56,7 @@ static const char *const autostart[] = {
 };
 
 /* tagging */
-static const char *tags[] = { " ", "󰻀", "󰈹", "", "", "󰘻", "󱍙", "", "" };
+static const char *tags[] = { " ", "󰻀", "", "", "", "󰘻", "󱍙", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -125,7 +125,7 @@ static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", normbgco
 /* system, app control */ 
 static const char *lock[]     = { "slock", NULL};
 static const char *termcmd[]  = { "kitty", NULL };
-static const char *browser[]  = { "firefox", NULL};
+static const char *browser[]  = { "brave", NULL};
 static const char *manager[]  = { "dolphin", NULL};
 
 /* night light control */
