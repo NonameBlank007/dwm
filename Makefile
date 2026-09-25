@@ -27,7 +27,7 @@ dwm-msg: dwm-msg.o
 	${CC} -o $@ $< ${CFLAGS} ${LDFLAGS} ${LDLIBS}
 
 clean:
-	rm -f dwm dwm-msg ${OBJ} dwm-${VERSION}.tar.gz
+	rm -f dwm dwm-msg ${OBJ} dwm-msg.o dwm-${VERSION}.tar.gz *.orig *.rej
 
 dist: clean
 	mkdir -p dwm-${VERSION}
@@ -48,6 +48,7 @@ install: all
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
+		${DESTDIR}${PREFIX}/bin/dwm-msg\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 .PHONY: all clean dist install native uninstall 
