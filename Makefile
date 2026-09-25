@@ -17,10 +17,14 @@ config.h:
 	cp config.def.h $@
 
 dwm: ${OBJ}
-	${CC} -o $@ ${OBJ} ${LDFLAGS}
+	${CC} -o $@ ${OBJ} ${CFLAGS} ${LDFLAGS} ${LDLIBS}
+
+native:
+	$(MAKE) clean
+	$(MAKE) OPTIMISATIONS="${NATIVE_OPTIMISATIONS}" all
 
 dwm-msg: dwm-msg.o
-	${CC} -o $@ $< ${LDFLAGS}
+	${CC} -o $@ $< ${CFLAGS} ${LDFLAGS} ${LDLIBS}
 
 clean:
 	rm -f dwm dwm-msg ${OBJ} dwm-${VERSION}.tar.gz
@@ -46,4 +50,4 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
-.PHONY: all clean dist install uninstall
+.PHONY: all clean dist install native uninstall 
