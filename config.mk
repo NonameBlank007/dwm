@@ -4,8 +4,9 @@ VERSION = 6.8
 # Customize below to fit your system
 
 # paths
-PREFIX = /usr/local
-MANPREFIX = ${PREFIX}/share/man
+LOCALPREFIX = /usr/local
+MANPREFIX = ${LOCALPREFIX}/share/man
+SHAREPREFIX = /usr/share
 
 X11INC = /usr/X11R6/include
 X11LIB = /usr/X11R6/lib
