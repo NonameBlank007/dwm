@@ -42,6 +42,12 @@ static const char *const autostart[] = {
 
     /* start sxhkd */
     "sxhkd", NULL,
+
+    /* lockscreen */
+    "xss-lock -- slock" "&", NULL,
+
+    /* unclutter-xfixes*/
+    "unclutter --timeout 2 --jitter 5 --ignore-scrolling --exclude-root --fork", NULL,
     
     /* auth handler */ 
     "/usr/lib/polkit-mate/polkit-mate-authentication-agent-1", "&", NULL,
