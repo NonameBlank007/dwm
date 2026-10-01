@@ -44,7 +44,7 @@ static const char *const autostart[] = {
     "sxhkd", NULL,
 
     /* lockscreen */
-    "xss-lock -- slock" "&", NULL,
+    "xss-lock", "--", "slock", NULL,
 
     /* unclutter-xfixes*/
     "unclutter --timeout 2 --jitter 5 --ignore-scrolling --exclude-root --fork", NULL,
