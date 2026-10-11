@@ -37,6 +37,9 @@ static const char *const autostart[] = {
     /* notification daemon */
     "dunst", "&", NULL,
 
+    /* bluetooth manager */
+    "blueman-applet", NULL,
+
     /* network manager */
     "nm-applet", "&", NULL,
 
