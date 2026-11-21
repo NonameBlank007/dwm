@@ -1386,35 +1386,38 @@ killclient(const Arg *arg)
 }
 
 void
-loadxrdb()
+loadxrdb(void)
 {
-  Display *display;
-  char * resm;
-  XrmDatabase xrdb;
-  char *type;
-  XrmValue value;
+	Display *display;
+  	char *resm;
+  	XrmDatabase xrdb;
+  	char *type;
+  	XrmValue value;
 
-  display = XOpenDisplay(NULL);
+  	display = XOpenDisplay(NULL);
 
-  if (display != NULL) {
-    resm = XResourceManagerString(display);
+  	if (!display) 
+		return;
 
-    if (resm != NULL) {
-      xrdb = XrmGetStringDatabase(resm);
+  	resm = XResourceManagerString(display);
 
-      if (xrdb != NULL) {
+    if (!resm) {
+        XCloseDisplay(display);
+        return;
+    }
+
+    xrdb = XrmGetStringDatabase(resm);
+    if (xrdb != NULL) {
         XRDB_LOAD_COLOR("dwm.normbordercolor", normbordercolor);
         XRDB_LOAD_COLOR("dwm.normbgcolor", normbgcolor);
         XRDB_LOAD_COLOR("dwm.normfgcolor", normfgcolor);
         XRDB_LOAD_COLOR("dwm.selbordercolor", selbordercolor);
         XRDB_LOAD_COLOR("dwm.selbgcolor", selbgcolor);
         XRDB_LOAD_COLOR("dwm.selfgcolor", selfgcolor);
-      }
-	  XrmDestroyDatabase(xrdb);
+		XrmDestroyDatabase(xrdb);
     }
-  }
 
-  XCloseDisplay(display);
+  	XCloseDisplay(display);
 }
 
 void
@@ -2852,15 +2855,15 @@ xinitvisual(void)
 void
 xrdb(const Arg *arg)
 {
-  loadxrdb();
-  int i;
-  unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
-  for (i = 0; i < LENGTH(colors); i++) {
-	  if (scheme[i] != NULL) drw_scm_free(drw, scheme[i], 3);
-	  scheme[i] = drw_scm_create(drw, colors[i], alphas, 3);
-  }
-  focus(NULL);
-  arrange(NULL);
+	loadxrdb();
+  	int i;
+	unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
+  	for (i = 0; i < LENGTH(colors); i++) {
+		drw_scm_free(drw, scheme[i], 3);
+    	scheme[i] = drw_scm_create(drw, colors[i], alphas, 3);
+  	}
+  	focus(NULL);
+  	arrange(NULL);
 }
 
 void
@@ -2889,8 +2892,8 @@ main(int argc, char *argv[])
 	if (!(xcon = XGetXCBConnection(dpy)))
 		die("dwm: cannot get xcb connection\n");
 	checkotherwm();
-        XrmInitialize();
-        loadxrdb();
+    XrmInitialize();
+    loadxrdb();
 	autostart_exec();
 	setup();
 #ifdef __OpenBSD__
